@@ -2,6 +2,7 @@ package com.example.diemdanhsv.controllers;
 
 import com.example.diemdanhsv.models.Attendance;
 import com.example.diemdanhsv.models.Student;
+import com.example.diemdanhsv.models.User;
 import com.example.diemdanhsv.repository.AttendanceRepository;
 import com.example.diemdanhsv.repository.CourseRepository;
 import javafx.collections.FXCollections;
@@ -17,6 +18,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AttendanceController implements Initializable {
+    @FXML
+    private Button addButton;
+    @FXML
+    private Button removeButton;
+
     @FXML
     public TextField idField;
     @FXML
@@ -42,6 +48,8 @@ public class AttendanceController implements Initializable {
     private ObservableList<Student> studentList;
 
     private AttendanceRepository attendanceRepository;
+
+    private User currentUser;
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
@@ -127,5 +135,40 @@ public class AttendanceController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        if (user != null) {
+            switch (user.getRole()) {
+                case "ADMIN":
+                    enableAllControls();
+                    break;
+                case "TEACHER":
+                    enableTeacherControls();
+                    break;
+                case "STUDENT":
+                    enableStudentControls();
+                    break;
+            }
+        }
+    }
+
+    private void enableAllControls() {
+        addButton.setDisable(false);
+        removeButton.setDisable(false);
+        courseComboBox.setDisable(false);
+    }
+
+    private void enableTeacherControls() {
+        addButton.setDisable(false);
+        removeButton.setDisable(false);
+        courseComboBox.setDisable(false);
+    }
+
+    private void enableStudentControls() {
+        addButton.setDisable(true);
+        removeButton.setDisable(true);
+        courseComboBox.setDisable(true);
     }
 }

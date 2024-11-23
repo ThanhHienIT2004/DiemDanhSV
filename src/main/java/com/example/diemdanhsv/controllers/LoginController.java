@@ -1,15 +1,16 @@
 package com.example.diemdanhsv.controllers;
 
+import com.example.diemdanhsv.models.User;
+import com.example.diemdanhsv.repository.UserRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class LoginController {
 
@@ -17,46 +18,93 @@ public class LoginController {
     private TextField usernameField;
     @FXML
     private PasswordField passwordField;
+    @FXML
+    private Label messageLabel;
+
+    private final UserRepository userRepository;
+
+    public LoginController() {
+        this.userRepository = new UserRepository();
+    }
 
     @FXML
     public void handleLogin() {
-        // Lấy thông tin từ các trường nhập liệu
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText().trim();
 
-        // Giả sử bạn có một phương thức kiểm tra đăng nhập và người dùng hợp lệ
-        // (Ở đây bạn có thể thêm logic kiểm tra với cơ sở dữ liệu)
-        boolean isValidLogin = true; // Đây chỉ là ví dụ, bạn cần thực hiện kiểm tra thực tế.
+        // Validate input
+        if (username.isEmpty() || password.isEmpty()) {
+            showMessage("Vui lòng nhập đầy đủ thông tin!", true);
+            return;
+        }
 
-        if (isValidLogin) {
-            // Nếu đăng nhập thành công, bạn có thể hiển thị thông báo
-            // (Thực tế có thể chuyển đến màn hình Attendance)
-        } else {
-            showErrorMessage("Login Failed", "Invalid username or password.");
+        try {
+            User user = userRepository.login(username, password);
+            
+            if (user != null) {
+                if (user.isFirstLogin()) {
+                    // Nếu là lần đăng nhập đầu tiên, mở form đổi mật khẩu
+                    openChangePasswordForm(user);
+                } else {
+                    // Mở form chính tương ứng với role của user
+                    openMainMenuForm(user);
+                }
+                
+                // Đóng form login
+                closeLoginForm();
+            } else {
+                showMessage("Tên đăng nhập hoặc mật khẩu không đúng!", true);
+            }
+        } catch (Exception e) {
+            showMessage("Lỗi: " + e.getMessage(), true);
+            e.printStackTrace();
         }
     }
 
-    // Phương thức cho nút "Test"
-    @FXML
-    public void openNext() {
+    private void openChangePasswordForm(User user) {
         try {
-            // Tải màn hình Attendance từ FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/diemdanhsv/ChangePassword.fxml"));
+            Parent root = loader.load();
+
+            ChangePasswordController controller = loader.getController();
+            controller.setCurrentUser(user);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Đổi mật khẩu");
+            stage.show();
+        } catch (Exception e) {
+            showError("Lỗi", "Không thể mở form đổi mật khẩu: " + e.getMessage());
+        }
+    }
+
+    private void openMainMenuForm(User user) {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/diemdanhsv/MainMenu.fxml"));
             Parent root = loader.load();
 
-            // Lấy cửa sổ hiện tại và thay đổi nội dung scene
+            MainMenuController controller = loader.getController();
+            controller.setCurrentUser(user);
+
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("MENU");
+            stage.setTitle("Menu Chính");
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showErrorMessage("Error", "Failed to load MENU.");
+        } catch (Exception e) {
+            showError("Lỗi", "Không thể mở form menu chính: " + e.getMessage());
         }
     }
 
+    private void closeLoginForm() {
+        ((Stage) usernameField.getScene().getWindow()).close();
+    }
 
-    private void showErrorMessage(String title, String message) {
+    private void showMessage(String message, boolean isError) {
+        messageLabel.setText(message);
+        messageLabel.setStyle("-fx-text-fill: " + (isError ? "red" : "green"));
+    }
+
+    private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -64,3 +112,4 @@ public class LoginController {
         alert.showAndWait();
     }
 }
+
