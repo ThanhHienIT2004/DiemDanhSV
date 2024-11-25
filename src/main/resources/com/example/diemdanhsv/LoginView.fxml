@@ -8,20 +8,14 @@
 
 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="250.0" spacing="15" style="-fx-background-color: #f0f4f8; -fx-padding: 20;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.diemdanhsv.controllers.LoginController">
 
-    <!-- Title Label -->
-    <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="User Login" />
-
-    <!-- Username Field -->
-    <TextField fx:id="usernameField" prefWidth="200.0" promptText="Username" />
-
-    <!-- Password Field -->
-    <PasswordField fx:id="passwordField" prefWidth="200.0" promptText="Password" />
-
-    <!-- Login Button -->
-    <Button fx:id="loginButton" onAction="#handleLogin" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Login" />
-
-    <!-- Test Button for Next Action -->
-    <Button mnemonicParsing="false" onAction="#openNext" style="-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-weight: bold;" text="Test" />
-   <Label text="Label" />
+    <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Đăng nhập" />
+    
+    <TextField fx:id="usernameField" prefWidth="200.0" promptText="Tên đăng nhập" />
+    
+    <PasswordField fx:id="passwordField" prefWidth="200.0" promptText="Mật khẩu" />
+    
+    <Button fx:id="loginButton" onAction="#handleLogin" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Đăng nhập" />
+    
+    <Label fx:id="messageLabel" style="-fx-text-fill: red;" />
 
 </VBox>

@@ -5,27 +5,38 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    // Thông tin cấu hình cơ sở dữ liệu
     private static final String URL = "jdbc:mysql://localhost:3306/attendance";
-    private static final String USERNAME = "root"; // Đặt tên người dùng của bạn
-    private static final String PASSWORD = ""; // Đặt mật khẩu của bạn
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "";
 
-    // Phương thức tạo kết nối
     public static Connection getConnection() {
-        Connection connection = null;
         try {
-            // Đăng ký Driver MySQL (không bắt buộc với các phiên bản JDBC mới)
             Class.forName("com.mysql.cj.jdbc.Driver");
-            // Khởi tạo kết nối
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Kết nối cơ sở dữ liệu thành công!");
-        } catch (SQLException e) {
-            System.err.println("Không thể kết nối đến cơ sở dữ liệu!");
-            e.printStackTrace();
+            
+            Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            if (conn != null) {
+                System.out.println("Kết nối database thành công!");
+                return conn;
+            }
         } catch (ClassNotFoundException e) {
-            System.err.println("Không tìm thấy Driver!");
+            System.err.println("Lỗi: MySQL JDBC Driver không tìm thấy.");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Lỗi kết nối database: " + e.getMessage());
             e.printStackTrace();
         }
-        return connection;
+        return null;
+    }
+
+    public static void closeConnection(Connection conn) {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                System.out.println("Đã đóng kết nối database!");
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi đóng kết nối: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

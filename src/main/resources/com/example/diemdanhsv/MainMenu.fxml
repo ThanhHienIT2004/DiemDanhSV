@@ -6,22 +6,20 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="366.0" prefWidth="541.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.diemdanhsv.controllers.MainMenuController"> <!-- Thêm CSS -->
+<AnchorPane prefHeight="366.0" prefWidth="541.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.diemdanhsv.controllers.MainMenuController">
 
-    <!-- Menu container -->
+    <Label layoutX="16.0" layoutY="19.0" text="ỨNG DỤNG ĐIỂM DANH SINH VIÊN" textAlignment="CENTER" wrapText="true">
+        <font>
+            <Font size="32.0" />
+        </font>
+    </Label>
+
+    <Label fx:id="welcomeLabel" layoutX="20.0" layoutY="80.0" />
+
     <VBox alignment="CENTER" layoutX="127.0" layoutY="121.0" spacing="20">
-        <!-- Button 2 -->
         <Button onAction="#openAttendance" styleClass="menu-button" text="Xem danh sách điểm danh" />
-        <!-- Button 3 -->
-        <Button styleClass="menu-button" text="Đổi mật khẩu" />
-        <!-- Button 4 -->
-        <Button styleClass="menu-button" text="Đăng xuất" />
+        <Button onAction="#openChangePassword" styleClass="menu-button" text="Đổi mật khẩu" />
+        <Button onAction="#handleLogout" styleClass="menu-button" text="Đăng xuất" />
     </VBox>
-   <Label layoutX="255.0" layoutY="42.0" />
-   <Label layoutX="16.0" layoutY="19.0" text="ỨNG DỤNG ĐIỂM DANH SINH VIÊN" textAlignment="CENTER" wrapText="true">
-      <font>
-         <Font size="32.0" />
-      </font>
-   </Label>
 
 </AnchorPane>
